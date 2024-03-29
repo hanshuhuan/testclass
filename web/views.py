@@ -1,3 +1,4 @@
+from turtle import ht
 from django.shortcuts import render,redirect
 
 from django.shortcuts import HttpResponse
@@ -29,3 +30,6 @@ def index(request):
         {"name":"photo3","author":"author3"},
     ]
     return render(request,"index.html",{"data":data})
+
+def home_page(request):
+    return HttpResponse("<html><title>To-Do lists</title></html>")

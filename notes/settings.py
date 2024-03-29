@@ -76,14 +76,14 @@ WSGI_APPLICATION = "notes.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    # "default": {
-    #     "ENGINE": "django.db.backends.mysql",
-    #     "NAME": 'mydatabase',
-    #     "USER": 'root',
-    #     "PASSWORD": '123456',
-    #     "HOST": '127.0.0.1',
-    #     "PORT": '3306',
-    # }
+    "default": {
+        'ENGINE': 'django.db.backends.sqlite3',    # 使用的数据库引擎，这里是 SQLite3
+        'NAME': BASE_DIR / 'db.sqlite3',           # 数据库文件路径
+        'USER': '',                                # 数据库用户
+        'PASSWORD': '',                            # 数据库密码
+        'HOST': '',                                # 数据库主机
+        'PORT': '',                                # 数据库端口
+    }
 }
 
 
