@@ -32,4 +32,4 @@ def index(request):
     return render(request,"index.html",{"data":data})
 
 def home_page(request):
-    return HttpResponse("<html><title>To-Do lists</title></html>")
+    return render(request,"home.html")
