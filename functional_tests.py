@@ -39,12 +39,19 @@ class NewVisitorTest(unittest.TestCase):
         self.assertIn('1: Buy flowers', [row.text for row in rows])
         # 页面有一个文本输入框，可以输入另一个待办事项
         # 输入“give to girlfriend”
-        self.fail('Finish the test!')
+        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+        inputbox.send_keys('Give to girlfriend')
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
         # 页面再次更新，显示了两个待办事项
+        table = self.browser.find_element(By.ID, 'id_list_table')
+        rows = table.find_elements(By.TAG_NAME, 'tr')
+        self.assertIn('1: Buy flowers', [row.text for row in rows])
+        self.assertIn('2: Give to girlfriend', [row.text for row in rows])
 
         # 现在想知道这个网站是否会记住这两个待办事项
         # 看到网站为用户生成了一个唯一的URL
-
+        self.fail('Finish the test!')
         # 访问这个URL，发现待办事项列表还在
         # 满意的去睡觉了
 
