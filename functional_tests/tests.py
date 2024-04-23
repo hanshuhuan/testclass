@@ -1,9 +1,14 @@
 from email import header
+
+from sympy import Max
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 from selenium.webdriver.common.by import By
 from django.test import LiveServerTestCase
+from selenium.common.exceptions import WebDriverException
+
+Max_Wait=10
 
 class NewVisitorTest(LiveServerTestCase):
     
@@ -11,10 +16,17 @@ class NewVisitorTest(LiveServerTestCase):
         self.browser = webdriver.Firefox()
     def tearDown(self):
         self.browser.quit()
-    def check_for_row_in_list_table(self, row_text):
-        table = self.browser.find_element(By.ID, 'id_list_table')
-        rows = table.find_elements(By.TAG_NAME, 'tr')
-        self.assertIn(row_text, [row.text for row in rows])
+    def wait_for_row_in_list_table(self, row_text):
+        start_time = time.time()
+        try:
+            table = self.browser.find_element(By.ID, 'id_list_table')
+            rows = table.find_elements(By.TAG_NAME, 'tr')
+            self.assertIn(row_text, [row.text for row in rows])
+            return 
+        except(AssertionError,WebDriverException) as e:
+            if time.time() - start_time > Max_Wait:
+                raise e
+            time.sleep(0.5)
     def test_can_start_a_list_and_retrieve_it_later(self):
         # 现在有一个在线待办事项的应用
         # 进入应用的首页
@@ -36,12 +48,7 @@ class NewVisitorTest(LiveServerTestCase):
         # 按回车键后，页面更新了
         # 待办事项列表里显示了“1: buy flowers”
         inputbox.send_keys(Keys.ENTER) #(3)
-        time.sleep(1) #(4)
-        self.check_for_row_in_list_table('1: Buy flowers')
-
-        table = self.browser.find_element(By.ID, 'id_list_table')
-        rows = table.find_elements(By.TAG_NAME, 'tr')
-        self.assertIn('1: Buy flowers', [row.text for row in rows])
+        self.wait_for_row_in_list_table('1: Buy flowers')
         # 页面有一个文本输入框，可以输入另一个待办事项
         # 输入“give to girlfriend”
         inputbox = self.browser.find_element(By.ID, 'id_new_item')
@@ -49,8 +56,8 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
         # 页面再次更新，显示了两个待办事项
-        self.check_for_row_in_list_table('1: Buy flowers')
-        self.check_for_row_in_list_table('2: Give to girlfriend')
+        self.wait_for_row_in_list_table('1: Buy flowers')
+        self.wait_for_row_in_list_table('2: Give to girlfriend')
 
         # 现在想知道这个网站是否会记住这两个待办事项
         # 看到网站为用户生成了一个唯一的URL
