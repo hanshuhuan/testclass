@@ -1,6 +1,4 @@
 from email import header
-
-from sympy import Max
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
@@ -50,17 +48,44 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys(Keys.ENTER) #(3)
         self.wait_for_row_in_list_table('1: Buy flowers')
         # 页面有一个文本输入框，可以输入另一个待办事项
-        # 输入“give to girlfriend”
-        inputbox = self.browser.find_element(By.ID, 'id_new_item')
-        inputbox.send_keys('Give to girlfriend')
+        # 输入“give a gift to lyb"        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+        inputbox.send_keys('Give a gift to lyb')
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
         # 页面再次更新，显示了两个待办事项
         self.wait_for_row_in_list_table('1: Buy flowers')
-        self.wait_for_row_in_list_table('2: Give to girlfriend')
-
-        # 现在想知道这个网站是否会记住这两个待办事项
-        # 看到网站为用户生成了一个唯一的URL
-        self.fail('Finish the test!')
-        # 访问这个URL，发现待办事项列表还在
-        # 满意的去睡觉了
+        self.wait_for_row_in_list_table('2: Give a gift to lyb')
+        # 意满离
+    def test_multiple_users_can_start_lists_at_different_urls(self):
+        # 张三现在有一个新的待办事项应用
+        self.browser.get(self.live_server_url)
+        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+        inputbox.send_keys('Buy flowers')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table('1: Buy flowers')
+        # 他注意到网站为他生成了一个唯一的URL
+        zhangsan_list_url = self.browser.current_url
+        self.assertRegex(zhangsan_list_url, '/lists/.+')
+        # 现在有一个叫李四的新用户访问了网站
+        # 我们使用一个新的浏览器会话
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+        # 李四访问首页，看不到张三的待办事项
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element(By.TAG_NAME, 'body').text
+        self.assertNotIn('Buy flowers', page_text)
+        self.assertNotIn('Give a gift to lyb', page_text)
+        # 李四输入一个新的待办事项，新建一个清单
+        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+        inputbox.send_keys('Buy milk')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table('1: Buy milk')
+        # 李四获得了他的唯一URL
+        lisi_list_url = self.browser.current_url
+        self.assertRegex(lisi_list_url, '/lists/.+')
+        self.assertNotEqual(lisi_list_url, zhangsan_list_url)
+        # 这个页面还是没有张三的清单
+        page_text = self.browser.find_element(By.TAG_NAME, 'body').text
+        self.assertNotIn('Buy flowers', page_text)
+        self.assertIn('Buy milk', page_text)
+        # 意满离

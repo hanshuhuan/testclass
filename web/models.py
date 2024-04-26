@@ -6,4 +6,5 @@ class UserInfo(models.Model):
     email = models.EmailField(verbose_name="邮箱",max_length=32)
 
 class Item(models.Model):
-    text=models.TextField(default='')
+    text = models.TextField(default='')
+    
