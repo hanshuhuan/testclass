@@ -48,7 +48,8 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys(Keys.ENTER) #(3)
         self.wait_for_row_in_list_table('1: Buy flowers')
         # 页面有一个文本输入框，可以输入另一个待办事项
-        # 输入“give a gift to lyb"        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+        # 输入“give a gift to lyb"
+        inputbox = self.browser.find_element(By.ID, 'id_new_item')
         inputbox.send_keys('Give a gift to lyb')
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
@@ -65,7 +66,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.wait_for_row_in_list_table('1: Buy flowers')
         # 他注意到网站为他生成了一个唯一的URL
         zhangsan_list_url = self.browser.current_url
-        self.assertRegex(zhangsan_list_url, '/lists/.+')
+        self.assertRegex(zhangsan_list_url, '/web/.+')
         # 现在有一个叫李四的新用户访问了网站
         # 我们使用一个新的浏览器会话
         self.browser.quit()
@@ -82,7 +83,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.wait_for_row_in_list_table('1: Buy milk')
         # 李四获得了他的唯一URL
         lisi_list_url = self.browser.current_url
-        self.assertRegex(lisi_list_url, '/lists/.+')
+        self.assertRegex(lisi_list_url, '/web/.+')
         self.assertNotEqual(lisi_list_url, zhangsan_list_url)
         # 这个页面还是没有张三的清单
         page_text = self.browser.find_element(By.TAG_NAME, 'body').text

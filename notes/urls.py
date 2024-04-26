@@ -23,5 +23,6 @@ urlpatterns = [
     path("login/", views.login),
     path("photo_list/", views.photo_list),
     path("index/", views.index),
-    path("", views.home_page),
+    path("", views.home_page, name="home"),
+    path("web/the-new-page/", views.view_list, name="view_list"),
 ]
