@@ -5,6 +5,12 @@ class UserInfo(models.Model):
     password = models.CharField(verbose_name="密码",max_length=32)
     email = models.EmailField(verbose_name="邮箱",max_length=32)
 
+class List(models.Model):
+    pass
+
 class Item(models.Model):
     text = models.TextField(default='')
+    list = models.ForeignKey(List, default=None, on_delete=models.CASCADE)
+
+
     

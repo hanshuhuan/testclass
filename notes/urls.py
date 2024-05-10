@@ -24,5 +24,6 @@ urlpatterns = [
     path("photo_list/", views.photo_list),
     path("index/", views.index),
     path("", views.home_page, name="home"),
+    path("web/new", views.new_list, name="new_list"),
     path("web/the-new-page/", views.view_list, name="view_list"),
 ]
