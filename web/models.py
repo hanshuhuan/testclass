@@ -6,6 +6,7 @@ class UserInfo(models.Model):
     email = models.EmailField(verbose_name="邮箱",max_length=32)
 
 class List(models.Model):
+    id = models.AutoField(primary_key=True)###
     pass
 
 class Item(models.Model):
