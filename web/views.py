@@ -1,6 +1,5 @@
 from hmac import new
 from operator import ne
-from turtle import ht
 from unittest import TestCase
 from urllib import response
 from django.shortcuts import render,redirect
